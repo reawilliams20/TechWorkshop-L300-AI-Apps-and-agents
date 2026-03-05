@@ -6,17 +6,18 @@ param userPrincipalId string = deployer().objectId
 @description('Primary location for all resources.')
 param location string = resourceGroup().location
 
-var cosmosDbName = '${uniqueString(resourceGroup().id)}-cosmosdb'
+var uniqueId = uniqueString(resourceGroup().id, deployment().name)
+var cosmosDbName = '${uniqueId}-cosmosdb'
 var cosmosDbDatabaseName = 'zava'
-var storageAccountName = '${uniqueString(resourceGroup().id)}sa'
-var aiFoundryName = 'aif-${uniqueString(resourceGroup().id)}'
-var aiProjectName = 'proj-${uniqueString(resourceGroup().id)}'
-var webAppName = '${uniqueString(resourceGroup().id)}-app'
-var appServicePlanName = '${uniqueString(resourceGroup().id)}-cosu-asp'
-var logAnalyticsName = '${uniqueString(resourceGroup().id)}-cosu-la'
-var appInsightsName = '${uniqueString(resourceGroup().id)}-cosu-ai'
+var storageAccountName = '${uniqueId}sa'
+var aiFoundryName = 'aif-${uniqueId}'
+var aiProjectName = 'proj-${uniqueId}'
+var webAppName = '${uniqueId}-app'
+var appServicePlanName = '${uniqueId}-cosu-asp'
+var logAnalyticsName = '${uniqueId}-cosu-la'
+var appInsightsName = '${uniqueId}-cosu-ai'
 var webAppSku = 'S1'
-var registryName = '${uniqueString(resourceGroup().id)}cosureg'
+var registryName = '${uniqueId}cosureg'
 var registrySku = 'Standard'
 
 var tags = {
@@ -29,7 +30,7 @@ var tags = {
 
 // Ensure the current resource group has the required tag via a subscription-scoped module
 module updateRgTags 'updateRgTags.bicep' = {
-  name: 'updateRgTags'
+  name: 'updateRgTags-${uniqueString(resourceGroup().id)}'
   scope: subscription()
   params: {
     rgName: resourceGroup().name
